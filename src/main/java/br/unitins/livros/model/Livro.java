@@ -1,12 +1,42 @@
 package br.unitins.livros.model;
 
-public class Livro {
+import java.util.Objects;
+
+public class Livro implements Cloneable {
 	private Integer id;
 	private String nome;
 	private Integer anoLancamento;
 	private String editora;
 	private String genero;
 	private String autor;
+	
+	public Livro getClone() {
+		try {
+			return (Livro) super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Livro other = (Livro) obj;
+		return Objects.equals(id, other.id);
+	}
+
+
 
 	public Integer getId() {
 		return id;

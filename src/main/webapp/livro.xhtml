@@ -6,6 +6,7 @@
 	<title>Cadastro de Livro</title>
 </h:head>
 <h:body>
+	<h:messages style="color:red;"/>
 	<h:form >
 		<h1>.:Cadastro de Livro:.</h1>
 		<h:panelGrid columns="2" >
@@ -23,11 +24,21 @@
 		<h:panelGrid columns="4">
 			<h:commandButton 
 				value="Incluir" 
-				actionListener="#{livroController.incluir}"/>
+				actionListener="#{livroController.incluir}"
+				disabled="#{livroController.livro.id!=null}"
+				/>
 				
 			<h:commandButton 
 				value="Alterar" 
-				actionListener="#{livroController.alterar}"/>
+				actionListener="#{livroController.alterar}"
+				disabled="#{livroController.livro.id==null}"
+				/>
+				
+			<h:commandButton 
+				value="Excluir" 
+				actionListener="#{livroController.excluir}"
+				disabled="#{livroController.livro.id==null}"
+				/>
 				
 			<h:commandButton 
 				value="Limpar" 
@@ -71,6 +82,9 @@
 				<h:commandButton 
 					value="Editar"
 					actionListener="#{livroController.editar(obj)}"/>
+				<h:commandButton 
+					value="Excluir"
+					actionListener="#{livroController.excluir(obj)}"/>
 			</h:column>
 		
 		</h:dataTable>

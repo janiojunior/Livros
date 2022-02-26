@@ -5,9 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
+import br.unitins.livros.application.Util;
 import br.unitins.livros.model.Livro;
 
 @Named
@@ -24,31 +27,40 @@ public class LivroController implements Serializable {
 		getLivro().setId(cont++);
 		getListaLivro().add(getLivro());
 		livro = null;
+		
+		Util.addMessage("Inclusão realizada com sucesso.");
 	}
 	
 	public void alterar() {
+		int index = listaLivro.indexOf(getLivro());
+		listaLivro.set(index, getLivro());
 		
-		for (int index = 0; index < listaLivro.size(); index++) {
-			// encontrando o indice
-			if(listaLivro.get(index).getId().equals(getLivro().getId())) {
-				// substituindo o objeto 
-				listaLivro.set(index, getLivro());
-				break;
-			}
-		}
+		
+//		for (int index = 0; index < listaLivro.size(); index++) {
+//			// encontrando o indice
+//			if(listaLivro.get(index).getId().equals(getLivro().getId())) {
+//				// substituindo o objeto 
+//				listaLivro.set(index, getLivro());
+//				break;
+//			}
+//		}
 		// limpando o objeto livro (para limpar o formulario)
+		limpar();
+		Util.addMessage("Alteração realizada com sucesso.");
+	}
+	
+	public void excluir() {
+		excluir(getLivro());
 		limpar();
 	}
 	
+	public void excluir(Livro livro) {
+		listaLivro.remove(livro);
+		Util.addMessage("Exclusão realizada com sucesso.");
+	}
+	
 	public void editar(Livro livro) {
-		Livro novo = new Livro();
-		novo.setId(livro.getId());
-		novo.setNome(livro.getNome());
-		novo.setAnoLancamento(livro.getAnoLancamento());
-		novo.setAutor(livro.getAutor());
-		novo.setEditora(livro.getEditora());
-		novo.setGenero(livro.getGenero());
-		setLivro(novo);
+		setLivro(livro.getClone());
 	}
 	
 	public void limpar() {
