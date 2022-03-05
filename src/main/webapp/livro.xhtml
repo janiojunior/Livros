@@ -11,40 +11,57 @@
 		<h1>.:Cadastro de Livro:.</h1>
 		<h:panelGrid columns="2" >
 			<h:outputLabel value="Nome: " />
-			<h:inputText value="#{livroController.livro.nome}"/>
+			<h:inputText value="#{livroController.livro.nome}" />
 			<h:outputLabel value="Ano lançamento:" />
-			<h:inputText value="#{livroController.livro.anoLancamento}"/>
+			<h:inputText 
+				value="#{livroController.livro.anoLancamento}"
+				required="true"
+				requiredMessage="O ano do livro deve ser informado."/>
+			
 			<h:outputLabel value="Editora:" />
 			<h:inputText value="#{livroController.livro.editora}"/>
 			<h:outputLabel value="Genero:" />
-			<h:inputText value="#{livroController.livro.genero}"/>
+			<h:selectOneMenu value="#{livroController.livro.genero}">
+				<f:selectItem 
+					itemLabel="Selecione uma das opções ..."
+					/>
+					
+				<f:selectItems 
+					var="obj" 
+					value="#{livroController.listaGenero}" 
+					itemLabel="#{obj.label}"
+					itemValue="#{obj}"/>
+			</h:selectOneMenu>
+			
 			<h:outputLabel value="Autor:" />
 			<h:inputText value="#{livroController.livro.autor}"/>
 		</h:panelGrid>
-		<h:panelGrid columns="4">
-			<h:commandButton 
-				value="Incluir" 
-				actionListener="#{livroController.incluir}"
-				disabled="#{livroController.livro.id!=null}"
-				/>
-				
-			<h:commandButton 
-				value="Alterar" 
-				actionListener="#{livroController.alterar}"
-				disabled="#{livroController.livro.id==null}"
-				/>
-				
-			<h:commandButton 
-				value="Excluir" 
-				actionListener="#{livroController.excluir}"
-				disabled="#{livroController.livro.id==null}"
-				/>
-				
-			<h:commandButton 
-				value="Limpar" 
-				actionListener="#{livroController.limpar}"/>
-		</h:panelGrid>
-		
+		<h:commandButton 
+			value="Incluir" 
+			actionListener="#{livroController.incluir}"
+			disabled="#{livroController.livro.id!=null}"
+			/>
+			
+		<h:commandButton 
+			value="Alterar" 
+			actionListener="#{livroController.alterar}"
+			disabled="#{livroController.livro.id==null}"
+			/>
+	</h:form>	
+	
+	<h:form>
+		<h:commandButton 
+			value="Excluir" 
+			actionListener="#{livroController.excluir}"
+			disabled="#{livroController.livro.id==null}"
+			/>
+			
+		<h:commandButton 
+			value="Limpar" 
+			actionListener="#{livroController.limpar}"/>
+	</h:form>
+	
+	<h:form>
 		<h:dataTable 
 			value="#{livroController.listaLivro}"
 			var="obj">
@@ -70,7 +87,7 @@
 		
 			<h:column>
 				<f:facet name="header">Genero</f:facet>
-				<h:outputLabel value="#{obj.genero}"/>
+				<h:outputLabel value="#{obj.genero.label}"/>
 			</h:column>
 		
 			<h:column>

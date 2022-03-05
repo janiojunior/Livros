@@ -7,9 +7,9 @@ public class Livro implements Cloneable {
 	private String nome;
 	private Integer anoLancamento;
 	private String editora;
-	private String genero;
+	private Genero genero;
 	private String autor;
-	
+
 	public Livro getClone() {
 		try {
 			return (Livro) super.clone();
@@ -18,7 +18,7 @@ public class Livro implements Cloneable {
 		}
 		return null;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
@@ -35,8 +35,6 @@ public class Livro implements Cloneable {
 		Livro other = (Livro) obj;
 		return Objects.equals(id, other.id);
 	}
-
-
 
 	public Integer getId() {
 		return id;
@@ -70,11 +68,11 @@ public class Livro implements Cloneable {
 		this.editora = editora;
 	}
 
-	public String getGenero() {
+	public Genero getGenero() {
 		return genero;
 	}
 
-	public void setGenero(String genero) {
+	public void setGenero(Genero genero) {
 		this.genero = genero;
 	}
 

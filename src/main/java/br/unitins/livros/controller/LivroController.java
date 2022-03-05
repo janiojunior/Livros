@@ -4,26 +4,39 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.enterprise.context.RequestScoped;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
-import javax.faces.view.ViewScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
 
 import br.unitins.livros.application.Util;
+import br.unitins.livros.model.Genero;
 import br.unitins.livros.model.Livro;
 
 @Named
-@ViewScoped
+@ApplicationScoped
 public class LivroController implements Serializable {
 	
 	private static final long serialVersionUID = 1258970559285652391L;
 	private Livro livro;
 	private List<Livro> listaLivro;
 	private int cont = 1;
-
+	
+	private boolean validarCampos() {
+		// verificar se estah vazio ou nullo
+		if (getLivro().getNome().isBlank()) {
+			Util.addMessage("O nome do livro deve ser informado.");
+			return false;
+		}
+		if (getLivro().getNome().trim().length() < 2) {
+			Util.addMessage("O nome do livro deve ter pelo menos 2 caracteres.");
+			return false;
+		}
+		return true;
+	}
 	
 	public void incluir() {
+		if (!validarCampos())
+			return;
+		
 		getLivro().setId(cont++);
 		getListaLivro().add(getLivro());
 		livro = null;
@@ -32,6 +45,9 @@ public class LivroController implements Serializable {
 	}
 	
 	public void alterar() {
+		if (!validarCampos())
+			return;
+		
 		int index = listaLivro.indexOf(getLivro());
 		listaLivro.set(index, getLivro());
 		
@@ -65,6 +81,10 @@ public class LivroController implements Serializable {
 	
 	public void limpar() {
 		livro = null;
+	}
+	
+	public Genero[] getListaGenero() {
+		return Genero.values();
 	}
 	
 	public Livro getLivro() {
