@@ -6,20 +6,29 @@
 	<title>Cadastro de Livro</title>
 </h:head>
 <h:body>
-	<h:messages style="color:red;"/>
-	<h:form >
+	<h:messages id="messages"  
+		infoStyle="color:green;"  
+		warnStyle="color:yellow;"  
+		errorStyle="color:red;" />
+	<h:form id="formPrincipal">
 		<h1>.:Cadastro de Livro:.</h1>
-		<h:panelGrid columns="2" >
+		<h:panelGrid id="pgPrincipal" columns="2" >
 			<h:outputLabel value="Nome: " />
-			<h:inputText value="#{livroController.livro.nome}" />
+			<h:inputText id="itNome" value="#{livroController.livro.nome}" />
 			<h:outputLabel value="Ano lançamento:" />
 			<h:inputText 
 				value="#{livroController.livro.anoLancamento}"
 				required="true"
 				requiredMessage="O ano do livro deve ser informado."/>
 			
+			<h:outputLabel value="Data:" />
+			<h:inputText value="#{livroController.livro.data}">
+				<f:convertDateTime type="localDate" pattern="dd/MM/yyyy"/>
+			</h:inputText>
+			
 			<h:outputLabel value="Editora:" />
 			<h:inputText value="#{livroController.livro.editora}"/>
+			
 			<h:outputLabel value="Genero:" />
 			<h:selectOneMenu value="#{livroController.livro.genero}">
 				<f:selectItem 
@@ -33,36 +42,39 @@
 					itemValue="#{obj}"/>
 			</h:selectOneMenu>
 			
-			<h:outputLabel value="Autor:" />
-			<h:inputText value="#{livroController.livro.autor}"/>
+			<h:outputLabel value="Nome do Autor:" />
+			<h:inputText value="#{livroController.livro.autor.nome}"/>
+			
+			<h:outputLabel value="Idade do Autor:" />
+			<h:inputText value="#{livroController.livro.autor.idade}"/>
 		</h:panelGrid>
 		<h:commandButton 
 			value="Incluir" 
 			actionListener="#{livroController.incluir}"
-			disabled="#{livroController.livro.id!=null}"
-			/>
+			disabled="#{livroController.livro.id!=null}">
+			<f:ajax execute="formPrincipal" render="messages pgPrincipal dataTable" />
+		</h:commandButton>
 			
 		<h:commandButton 
 			value="Alterar" 
 			actionListener="#{livroController.alterar}"
 			disabled="#{livroController.livro.id==null}"
 			/>
-	</h:form>	
-	
-	<h:form>
 		<h:commandButton 
 			value="Excluir" 
 			actionListener="#{livroController.excluir}"
-			disabled="#{livroController.livro.id==null}"
-			/>
+			disabled="#{livroController.livro.id==null}">
+			<f:ajax  render="formPrincipal" />
+		</h:commandButton>
 			
 		<h:commandButton 
 			value="Limpar" 
-			actionListener="#{livroController.limpar}"/>
-	</h:form>
-	
-	<h:form>
+			actionListener="#{livroController.limpar}">
+			<f:ajax  render="@all" />
+		</h:commandButton>
+
 		<h:dataTable 
+			id="dataTable"
 			value="#{livroController.listaLivro}"
 			var="obj">
 			<h:column>
@@ -81,10 +93,17 @@
 			</h:column>
 		
 			<h:column>
+				<f:facet name="header">Data</f:facet>
+				<h:outputLabel value="#{obj.data}">
+					<f:convertDateTime type="localDate" pattern="dd/MM/yyyy"/>
+				</h:outputLabel>
+			</h:column>
+		
+			<h:column>
 				<f:facet name="header">Editora</f:facet>
 				<h:outputLabel value="#{obj.editora}"/>
 			</h:column>
-		
+			
 			<h:column>
 				<f:facet name="header">Genero</f:facet>
 				<h:outputLabel value="#{obj.genero.label}"/>
@@ -92,20 +111,21 @@
 		
 			<h:column>
 				<f:facet name="header">Autor</f:facet>
-				<h:outputLabel value="#{obj.autor}"/>
+				<h:outputLabel value="#{obj.autor.nome}"/>
 			</h:column>
 			<h:column>
 				<f:facet name="header">Ação</f:facet>
 				<h:commandButton 
 					value="Editar"
-					actionListener="#{livroController.editar(obj)}"/>
+					actionListener="#{livroController.editar(obj)}">
+					<f:ajax execute="@this" render="formPrincipal" />
+				</h:commandButton>
 				<h:commandButton 
 					value="Excluir"
 					actionListener="#{livroController.excluir(obj)}"/>
 			</h:column>
 		
 		</h:dataTable>
-		
 	</h:form>
 </h:body>
 </html>

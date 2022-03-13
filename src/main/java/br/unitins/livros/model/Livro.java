@@ -1,14 +1,16 @@
 package br.unitins.livros.model;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class Livro implements Cloneable {
 	private Integer id;
 	private String nome;
 	private Integer anoLancamento;
+	private LocalDate data;
 	private String editora;
 	private Genero genero;
-	private String autor;
+	private Autor autor;
 
 	public Livro getClone() {
 		try {
@@ -76,12 +78,20 @@ public class Livro implements Cloneable {
 		this.genero = genero;
 	}
 
-	public String getAutor() {
+	public Autor getAutor() {
 		return autor;
 	}
 
-	public void setAutor(String autor) {
+	public void setAutor(Autor autor) {
 		this.autor = autor;
+	}
+
+	public LocalDate getData() {
+		return data;
+	}
+
+	public void setData(LocalDate data) {
+		this.data = data;
 	}
 
 }

@@ -8,6 +8,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
 
 import br.unitins.livros.application.Util;
+import br.unitins.livros.model.Autor;
 import br.unitins.livros.model.Genero;
 import br.unitins.livros.model.Livro;
 
@@ -23,11 +24,11 @@ public class LivroController implements Serializable {
 	private boolean validarCampos() {
 		// verificar se estah vazio ou nullo
 		if (getLivro().getNome().isBlank()) {
-			Util.addMessage("O nome do livro deve ser informado.");
+			Util.addMessageError("O nome do livro deve ser informado.");
 			return false;
 		}
 		if (getLivro().getNome().trim().length() < 2) {
-			Util.addMessage("O nome do livro deve ter pelo menos 2 caracteres.");
+			Util.addMessageError("O nome do livro deve ter pelo menos 2 caracteres.");
 			return false;
 		}
 		return true;
@@ -41,7 +42,7 @@ public class LivroController implements Serializable {
 		getListaLivro().add(getLivro());
 		livro = null;
 		
-		Util.addMessage("Inclusão realizada com sucesso.");
+		Util.addMessageInfo("Inclusão realizada com sucesso.");
 	}
 	
 	public void alterar() {
@@ -62,7 +63,7 @@ public class LivroController implements Serializable {
 //		}
 		// limpando o objeto livro (para limpar o formulario)
 		limpar();
-		Util.addMessage("Alteração realizada com sucesso.");
+		Util.addMessageInfo("Alteração realizada com sucesso.");
 	}
 	
 	public void excluir() {
@@ -72,7 +73,7 @@ public class LivroController implements Serializable {
 	
 	public void excluir(Livro livro) {
 		listaLivro.remove(livro);
-		Util.addMessage("Exclusão realizada com sucesso.");
+		Util.addMessageInfo("Exclusão realizada com sucesso.");
 	}
 	
 	public void editar(Livro livro) {
@@ -88,8 +89,10 @@ public class LivroController implements Serializable {
 	}
 	
 	public Livro getLivro() {
-		if (livro == null)
+		if (livro == null) {
 			livro = new Livro();
+			livro.setAutor(new Autor());
+		}
 		return livro;
 	}
 
