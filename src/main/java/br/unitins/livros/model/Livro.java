@@ -3,11 +3,18 @@ package br.unitins.livros.model;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import javax.validation.constraints.Future;
+import javax.validation.constraints.NotNull;
+
 public class Livro implements Cloneable {
 	private Integer id;
 	private String nome;
 	private Integer anoLancamento;
+	
+	@NotNull(message = "A data não pode ser nula.")
+	@Future(message = "A data deve estar no futuro.")
 	private LocalDate data;
+	
 	private String editora;
 	private Genero genero;
 	private Autor autor;
