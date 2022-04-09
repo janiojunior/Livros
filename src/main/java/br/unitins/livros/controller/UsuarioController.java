@@ -2,7 +2,6 @@ package br.unitins.livros.controller;
 
 import java.io.Serializable;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -12,6 +11,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
 
 import br.unitins.livros.application.Util;
+import br.unitins.livros.dao.UsuarioDAO;
 import br.unitins.livros.model.Usuario;
 
 @Named
@@ -22,28 +22,15 @@ public class UsuarioController implements Serializable {
 	private Usuario usuario;
 	private List<Usuario> listaUsuario;
 
-	public static Connection getConnection() {
-		try {
-			Class.forName("org.postgresql.Driver");
-		} catch (ClassNotFoundException e) {
-			System.out.println("Driver não encontrado. Faça o download.");
-			e.printStackTrace();
-			return null;
-		}
-
-		Connection conn = null;
-		try {
-			conn = DriverManager.getConnection("jdbc:postgresql://127.0.0.1:5432/livrosdb", "topicos1", "123456");
-		} catch (SQLException e) {
-			System.out.println("Problema ao conectar no banco de dados. Verifique as informacoes de conexao.");
-			e.printStackTrace();
-			return null;
-		}
-
-		return conn;
-	}
 
 	public void incluir() {
+		UsuarioDAO dao = new UsuarioDAO();
+		if (!dao.insert(getUsuario())) {
+			Util.addMessageInfo("Erro ao tentar incluir o usuário.");
+			return;
+		}
+		limpar();
+		setListaUsuario(null);
 		Util.addMessageInfo("Inclusão realizada com sucesso.");
 	}
 
@@ -83,60 +70,10 @@ public class UsuarioController implements Serializable {
 
 	public List<Usuario> getListaUsuario() {
 		if (listaUsuario == null) {
-			listaUsuario = new ArrayList<Usuario>();
-
-			Connection conn = UsuarioController.getConnection();
-			if (conn == null) {
-				Util.addMessageError("Problemas ao acessar o banco de dados. Entre em contato com o suporte.");
-				return listaUsuario;
-			}
-
-			StringBuffer sql = new StringBuffer();
-			sql.append("SELECT ");
-			sql.append("  u.id, ");
-			sql.append("  u.nome, ");
-			sql.append("  u.login, ");
-			sql.append("  u.senha ");
-			sql.append("FROM ");
-			sql.append("  usuario u ");
-			sql.append("ORDER BY ");
-			sql.append("  u.nome DESC, u.login DESC ");
-
-			ResultSet rs = null;
-			try {
-				rs = conn.createStatement().executeQuery(sql.toString());
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			try {
-				while (rs.next()) {
-					Usuario usuario = new Usuario();
-					usuario.setId(rs.getInt("id"));
-					usuario.setNome(rs.getString("nome"));
-					usuario.setLogin(rs.getString("login"));
-					usuario.setSenha(rs.getString("senha"));
-
-					listaUsuario.add(usuario);
-				}
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			try {
-				rs.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			try {
-				conn.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			UsuarioDAO dao = new UsuarioDAO();
+			listaUsuario = dao.getAll();
+			if (listaUsuario == null) 
+				listaUsuario = new ArrayList<Usuario>();
 		}
 		return listaUsuario;
 	}
