@@ -24,6 +24,9 @@ public class TesteBanco {
 			System.out.println("Problema ao conectar no banco de dados. Verifique as informacoes de conexao.");
 			e.printStackTrace();
 		}
+		
+		
+		
 		StringBuffer sql = new StringBuffer();
 		sql.append("SELECT ");
 		sql.append("  u.id, ");
