@@ -26,6 +26,28 @@
 			<h:outputLabel value="Senha:" />
 			<h:inputSecret value="#{usuarioController.usuario.senha}"/>
 			
+			<h:outputLabel value="Data de Nascimento:" />
+			<h:panelGroup>
+				<input  
+					jsf:id="data" 
+					type="date" 
+					jsf:value="#{usuarioController.usuario.dataNascimento}">
+					<f:convertDateTime type="localDate" pattern="yyyy-MM-dd"/>
+				</input>
+				<h:message for="data" style="color:red"/>
+			</h:panelGroup>
+			
+			<h:outputLabel value="Perfil:" />
+			<h:selectOneMenu value="#{usuarioController.usuario.perfil}">
+				<f:selectItem 
+					itemLabel="Selecione um Perfil ..."/>
+				<f:selectItems 
+					var="obj" 
+					value="#{usuarioController.listaPerfil}" 
+					itemLabel="#{obj.label}"
+					itemValue="#{obj}"/>
+			</h:selectOneMenu>
+			
 		</h:panelGrid>
 		<h:commandButton 
 			value="Incluir" 
@@ -37,8 +59,10 @@
 		<h:commandButton 
 			value="Alterar" 
 			actionListener="#{usuarioController.alterar}"
-			disabled="#{usuarioController.usuario.id==null}"
-			/>
+			disabled="#{usuarioController.usuario.id==null}">
+			<f:ajax execute="formPrincipal" render="@form" />
+		</h:commandButton>
+		
 		<h:commandButton 
 			value="Excluir" 
 			actionListener="#{usuarioController.excluir}"
@@ -74,6 +98,28 @@
 			<h:column>
 				<f:facet name="header">Senha</f:facet>
 				<h:outputLabel value="#{obj.senha}"/>
+			</h:column>
+			
+			<h:column>
+				<f:facet name="header">Data Nascimento</f:facet>
+				<h:outputLabel value="#{obj.dataNascimento}">
+					<f:convertDateTime type="localDate" pattern="dd/MM/yyyy"/>
+				</h:outputLabel>
+			</h:column>
+			
+			<h:column>
+				<f:facet name="header">Perfil</f:facet>
+				<h:outputLabel value="#{obj.perfil.label}"/>
+			</h:column>
+			
+			<h:column>
+				<f:facet name="header">Ação</f:facet>
+				<h:commandButton value="Editar" actionListener="#{usuarioController.editar(obj.id)}">
+					<f:ajax execute="@this" render="@form" />
+				</h:commandButton>
+				<h:commandButton value="Excluir" actionListener="#{usuarioController.excluir(obj.id)}">
+					<f:ajax execute="@this" render="@form" />
+				</h:commandButton>
 			</h:column>
 		
 		</h:dataTable>

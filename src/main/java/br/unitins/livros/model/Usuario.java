@@ -1,5 +1,6 @@
 package br.unitins.livros.model;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class Usuario implements Cloneable {
@@ -7,6 +8,8 @@ public class Usuario implements Cloneable {
 	private String nome;
 	private String login;
 	private String senha;
+	private Perfil perfil;
+	private LocalDate dataNascimento;
 
 	public Usuario getClone() {
 		try {
@@ -64,6 +67,22 @@ public class Usuario implements Cloneable {
 
 	public void setSenha(String senha) {
 		this.senha = senha;
+	}
+
+	public Perfil getPerfil() {
+		return perfil;
+	}
+
+	public void setPerfil(Perfil perfil) {
+		this.perfil = perfil;
+	}
+
+	public LocalDate getDataNascimento() {
+		return dataNascimento;
+	}
+
+	public void setDataNascimento(LocalDate dataNascimento) {
+		this.dataNascimento = dataNascimento;
 	}
 
 }

@@ -1,9 +1,6 @@
 package br.unitins.livros.controller;
 
 import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +9,7 @@ import javax.inject.Named;
 
 import br.unitins.livros.application.Util;
 import br.unitins.livros.dao.UsuarioDAO;
+import br.unitins.livros.model.Perfil;
 import br.unitins.livros.model.Usuario;
 
 @Named
@@ -35,26 +33,42 @@ public class UsuarioController implements Serializable {
 	}
 
 	public void alterar() {
+		UsuarioDAO dao = new UsuarioDAO();
+		if (!dao.update(getUsuario())) {
+			Util.addMessageInfo("Erro ao tentar alterar o usuário.");
+			return;
+		}
 		limpar();
+		setListaUsuario(null);
 		Util.addMessageInfo("Alteração realizada com sucesso.");
 	}
 
 	public void excluir() {
-		excluir(getUsuario());
+		excluir(getUsuario().getId());
 		limpar();
 	}
 
-	public void excluir(Usuario usuario) {
-		listaUsuario.remove(usuario);
+	public void excluir(int id) {
+		UsuarioDAO dao = new UsuarioDAO();
+		if (!dao.delete(id)) {
+			Util.addMessageInfo("Erro ao tentar excluir o usuário.");
+			return;
+		}
+		setListaUsuario(null);
 		Util.addMessageInfo("Exclusão realizada com sucesso.");
 	}
 
-	public void editar(Usuario usuario) {
-		setUsuario(usuario.getClone());
+	public void editar(int id) {
+		UsuarioDAO dao = new UsuarioDAO();
+		setUsuario(dao.getById(id));
 	}
 
 	public void limpar() {
 		usuario = null;
+	}
+	
+	public Perfil[] getListaPerfil() {
+		return Perfil.values();
 	}
 
 	public Usuario getUsuario() {
