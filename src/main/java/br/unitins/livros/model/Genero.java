@@ -1,28 +1,24 @@
 package br.unitins.livros.model;
 
-public enum Genero {
-	
-	ACAO(1, "Ação"), 
-	ROMANCE(2, "Romance"), 
-	TERROR(3, "Terror"), 
-	COMEDIA(4, "Comédia"), 
-	ADULTO(5, "Adulto");
-	
-	private int id;
-	private String label;
-	
-	Genero(int id, String label) {
-		this.id = id;
-		this.label = label;
-	}
-	
-	public int getId() {
+public class Genero {
+
+	private Integer id;
+	private String nome;
+
+	public Integer getId() {
 		return id;
 	}
-	
-	public String getLabel() {
-		return label;
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
-	
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
 
 }

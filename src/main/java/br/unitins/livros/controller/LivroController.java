@@ -84,14 +84,9 @@ public class LivroController implements Serializable {
 		livro = null;
 	}
 	
-	public Genero[] getListaGenero() {
-		return Genero.values();
-	}
-	
 	public Livro getLivro() {
 		if (livro == null) {
 			livro = new Livro();
-			livro.setAutor(new Autor());
 		}
 		return livro;
 	}

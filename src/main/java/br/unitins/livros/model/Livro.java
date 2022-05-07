@@ -3,21 +3,24 @@ package br.unitins.livros.model;
 import java.time.LocalDate;
 import java.util.Objects;
 
-import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 
 public class Livro implements Cloneable {
 	private Integer id;
+
+	@NotNull(message = "O nome não pode ser nulo.")
 	private String nome;
-	private Integer anoLancamento;
-	
+
 	@NotNull(message = "A data não pode ser nula.")
-	@Future(message = "A data deve estar no futuro.")
-	private LocalDate data;
-	
+	private LocalDate dataLancamento;
+
+	@NotNull(message = "A editora não pode ser nula.")
 	private String editora;
+
+	@NotNull(message = "O autor não pode ser nulo.")
+	private String autor;
+
 	private Genero genero;
-	private Autor autor;
 
 	public Livro getClone() {
 		try {
@@ -61,12 +64,12 @@ public class Livro implements Cloneable {
 		this.nome = nome;
 	}
 
-	public Integer getAnoLancamento() {
-		return anoLancamento;
+	public LocalDate getDataLancamento() {
+		return dataLancamento;
 	}
 
-	public void setAnoLancamento(Integer anoLancamento) {
-		this.anoLancamento = anoLancamento;
+	public void setDataLancamento(LocalDate dataLancamento) {
+		this.dataLancamento = dataLancamento;
 	}
 
 	public String getEditora() {
@@ -85,20 +88,12 @@ public class Livro implements Cloneable {
 		this.genero = genero;
 	}
 
-	public Autor getAutor() {
+	public String getAutor() {
 		return autor;
 	}
 
-	public void setAutor(Autor autor) {
+	public void setAutor(String autor) {
 		this.autor = autor;
-	}
-
-	public LocalDate getData() {
-		return data;
-	}
-
-	public void setData(LocalDate data) {
-		this.data = data;
 	}
 
 }
