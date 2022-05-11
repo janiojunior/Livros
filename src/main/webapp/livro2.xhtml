@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns="http://www.w3.org/1999/xhtml"
+				   xmlns:f="http://xmlns.jcp.org/jsf/core"
+				   xmlns:h="http://xmlns.jcp.org/jsf/html"
+				   xmlns:jsf="http://xmlns.jcp.org/jsf">
+<h:head>
+	<title>Cadastro de Livro</title>
+</h:head>
+<h:body>
+	<h:form id="formPrincipal">
+		<h:messages id="messages"
+			globalOnly="true"  
+			infoStyle="color:green;"  
+			warnStyle="color:yellow;"  
+			errorStyle="color:red;" />
+		<h:panelGrid id="pgPrincipal" columns="2" >
+		
+			<f:facet name="header">
+				<h:panelGrid columns="2">
+				<h:commandButton 
+					value="Voltar" 
+					actionListener="#{livro2Controller.voltar}">
+					<f:ajax execute="@this" />
+				</h:commandButton>
+				<h1>Cadastro de Livro</h1>
+				</h:panelGrid>
+			</f:facet>
+		
+			<h:outputLabel value="Nome: " />
+			<h:inputText id="itNome" value="#{livro2Controller.livro.nome}" />
+			
+			<h:outputLabel value="Data de Lancamento:" />
+			<h:panelGroup>
+				<input  
+					jsf:id="data" 
+					jsf:immediate="true"
+					type="date" 
+					jsf:value="#{livro2Controller.livro.dataLancamento}">
+					<f:convertDateTime type="localDate" pattern="yyyy-MM-dd"/>
+				</input>
+				<h:message for="data" style="color:red"/>
+			</h:panelGroup>
+			
+			<h:outputLabel value="Editora:" />
+			<h:inputText value="#{livro2Controller.livro.editora}"/>
+			
+			<h:outputLabel value="Autor:" />
+			<h:inputText value="#{livro2Controller.livro.autor}"/>
+			
+
+		</h:panelGrid>
+		<h:commandButton 
+			value="Incluir" 
+			actionListener="#{livro2Controller.incluir}"
+			disabled="#{livro2Controller.livro.id!=null}">
+			<f:ajax execute="formPrincipal" render="messages pgPrincipal dataTable" />
+		</h:commandButton>
+			
+		<h:commandButton 
+			value="Alterar" 
+			actionListener="#{livro2Controller.alterar}"
+			disabled="#{livro2Controller.livro.id==null}"
+			/>
+		<h:commandButton 
+			value="Excluir" 
+			actionListener="#{livro2Controller.excluir}"
+			disabled="#{livro2Controller.livro.id==null}">
+			<f:ajax  render="formPrincipal" />
+		</h:commandButton>
+			
+		<h:commandButton 
+			value="Limpar" 
+			actionListener="#{livro2Controller.limpar}">
+			<f:ajax  render="@all" />
+		</h:commandButton>
+
+	</h:form>
+</h:body>
+</html>

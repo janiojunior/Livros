@@ -10,8 +10,6 @@ import java.util.List;
 
 import br.unitins.livros.model.Genero;
 import br.unitins.livros.model.Livro;
-import br.unitins.livros.model.Perfil;
-import br.unitins.livros.model.Usuario;
 
 public class LivroDAO implements DAO<Livro> {
 
@@ -159,6 +157,123 @@ public class LivroDAO implements DAO<Livro> {
 
 		try {
 			rs = conn.createStatement().executeQuery(sql.toString());
+			while (rs.next()) {
+				Livro livro = new Livro();
+				livro.setId(rs.getInt("id"));
+				livro.setNome(rs.getString("nome"));
+				livro.setDataLancamento(rs.getDate("data_lancamento").toLocalDate());
+				livro.setEditora(rs.getString("editora"));
+				livro.setAutor(rs.getString("autor"));
+				
+				livro.setGenero(new Genero());
+				livro.getGenero().setId(rs.getInt("id_genero"));
+					
+				lista.add(livro);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			lista = null;
+		}
+
+		try {
+			rs.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		try {
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return lista;
+	}
+	
+	public Livro getById(int id) {
+		Connection conn = DAO.getConnection();
+		if (conn == null) {
+			return null;
+		}
+		
+		Livro livro = null;
+		
+		StringBuffer sql = new StringBuffer();
+		sql.append("SELECT ");
+		sql.append("  l.id, ");
+		sql.append("  l.nome, ");
+		sql.append("  l.data_lancamento, ");
+		sql.append("  l.editora, ");
+		sql.append("  l.autor, ");
+		sql.append("  l.id_genero ");
+		sql.append("FROM ");
+		sql.append("  livro l ");
+		sql.append("WHERE ");
+		sql.append("  l.id = ? ");
+
+		ResultSet rs = null;
+		PreparedStatement stat = null;
+		try {
+			stat = conn.prepareStatement(sql.toString());
+			stat.setInt(1, id);
+			
+			rs = stat.executeQuery();
+			if (rs.next()) {
+				livro = new Livro();
+				livro.setId(rs.getInt("id"));
+				livro.setNome(rs.getString("nome"));
+				livro.setDataLancamento(rs.getDate("data_lancamento").toLocalDate());
+				livro.setEditora(rs.getString("editora"));
+				livro.setAutor(rs.getString("autor"));
+				
+				livro.setGenero(new Genero());
+				livro.getGenero().setId(rs.getInt("id_genero"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			rs.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		try {
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return livro;
+	}
+
+	public List<Livro> getByNome(String nome) {
+		Connection conn = DAO.getConnection();
+		if (conn == null) {
+			return null;
+		}
+
+		List<Livro> lista = new ArrayList<Livro>();
+
+		StringBuffer sql = new StringBuffer();
+		sql.append("SELECT ");
+		sql.append("  l.id, ");
+		sql.append("  l.nome, ");
+		sql.append("  l.data_lancamento, ");
+		sql.append("  l.editora, ");
+		sql.append("  l.autor, ");
+		sql.append("  l.id_genero ");
+		sql.append("FROM ");
+		sql.append("  livro l ");
+		sql.append("WHERE ");
+		sql.append(" l.nome iLIKE ? ");
+		sql.append("ORDER BY ");
+		sql.append("  l.nome ");
+
+		ResultSet rs = null;
+		PreparedStatement stat = null;
+		try {
+			stat = conn.prepareStatement(sql.toString());
+			stat.setString(1, "%" + nome + "%");
+			
+			rs = stat.executeQuery();
 			while (rs.next()) {
 				Livro livro = new Livro();
 				livro.setId(rs.getInt("id"));
