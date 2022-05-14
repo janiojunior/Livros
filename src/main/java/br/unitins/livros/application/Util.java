@@ -6,7 +6,26 @@ import javax.faces.application.FacesMessage;
 import javax.faces.application.FacesMessage.Severity;
 import javax.faces.context.FacesContext;
 
+import org.apache.commons.codec.digest.DigestUtils;
+
+import br.unitins.livros.model.Usuario;
+
 public class Util {
+	
+	public static void main(String[] args) {
+		String senha = "janiojunior" + "123";
+		senha = Util.hash(senha);
+		System.out.println(senha);
+		System.out.println(Util.hash("123"));
+	}
+	
+	public static String hash(String valor) {
+		return DigestUtils.sha256Hex(valor);
+	}
+	
+	public static String hash(Usuario usuario) {
+		return DigestUtils.sha256Hex(usuario.getLogin()+usuario.getSenha());
+	}
 
 	public static void addMessageInfo(String message) {
 		addMessage(message, FacesMessage.SEVERITY_INFO);

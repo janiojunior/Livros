@@ -1,92 +1,100 @@
-<!DOCTYPE html>
-<html lang="pt-br" xmlns="http://www.w3.org/1999/xhtml"
-				   xmlns:f="http://xmlns.jcp.org/jsf/core"
-				   xmlns:h="http://xmlns.jcp.org/jsf/html"
-				   xmlns:jsf="http://xmlns.jcp.org/jsf">
-<h:head>
-	<title>Cadastro de Livro</title>
-</h:head>
-<h:body>
-	<h:form id="formPrincipal">
-		<h:messages id="messages"
-			globalOnly="true"  
-			infoStyle="color:green;"  
-			warnStyle="color:yellow;"  
-			errorStyle="color:red;" />
-		
-		<h:panelGrid id="pgPrincipal" columns="3" >
-			
-			<f:facet name="header">
-				<h:panelGrid columns="2">
-				<h1>Cadastro de Livro</h1>
-				<h:commandButton 
-					value="Novo" 
-					actionListener="#{livro1Controller.novo}">
-					<f:ajax execute="@this" />
-				</h:commandButton>
-				</h:panelGrid>
-			</f:facet>
-		
-			<h:outputLabel value="Nome: " />
-			<h:inputText id="itNome" value="#{livro1Controller.filtro}" />
-			
-			<h:commandButton 
-				value="Pesquisar" 
-				actionListener="#{livro1Controller.pesquisar}">
-				<f:ajax execute="formPrincipal" render="messages pgPrincipal dataTable" />
-			</h:commandButton>
-		</h:panelGrid>
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
 
-		<h:dataTable 
-			id="dataTable"
-			value="#{livro1Controller.listaLivro}"
-			var="obj">
-			<h:column>
-				<f:facet name="header">Id</f:facet>
-				<h:outputLabel value="#{obj.id}"/>
-			</h:column>
-			
-			<h:column>
-				<f:facet name="header">Nome</f:facet>
-				<h:outputLabel value="#{obj.nome}"/>
-			</h:column>
-		
-			<h:column>
-				<f:facet name="header">Data Lançamento</f:facet>
-				<h:outputLabel value="#{obj.dataLancamento}">
-					<f:convertDateTime type="localDate" pattern="dd/MM/yyyy"/>
-				</h:outputLabel>
-			</h:column>
-		
-			<h:column>
-				<f:facet name="header">Editora</f:facet>
-				<h:outputLabel value="#{obj.editora}"/>
-			</h:column>
-			
-			<h:column>
-				<f:facet name="header">Autor</f:facet>
-				<h:outputLabel value="#{obj.autor}"/>
-			</h:column>
-			
-			<h:column>
-				<f:facet name="header">Genero</f:facet>
-				<h:outputLabel value="#{obj.genero.id}"/>
-			</h:column>
-		
+<ui:composition template="/template.xhtml">
+<ui:define name="conteudo">
+	<h:form >
 
-			<h:column>
-				<f:facet name="header">Ação</f:facet>
-				<h:commandButton 
-					value="Editar"
-					actionListener="#{livro1Controller.editar(obj.id)}">
-					<f:ajax execute="@this" render="@form" />
-				</h:commandButton>
-				<h:commandButton 
-					value="Excluir"
-					actionListener="#{livro1Controller.excluir(obj.id)}"/>
-			</h:column>
+	<h:messages 
+		errorStyle="color:red" 
+		warnStyle="color:orange" 
+		infoStyle="color:green"
+		globalOnly="false"/>
 		
-		</h:dataTable>
+	<!-- Container -->
+	<div class="container-fluid">
+		<div class="row justify-content-md-center">
+			<div class="col-md-6 col-md-auto login-box">		
+	 			<h:messages styleClass="alert alert-danger hmessages"  />
+				<div class="form-row">
+				 	<div class="form-group col-md-10">
+				 		<h1 class="text-center wdi-red">Consulta de Livros</h1>
+				    </div>
+				    <div class="form-group col-md-2">
+					    	<h:commandButton value="+ Produto"
+						     	class="btn btn-success"
+								action="#{livro1Controller.novo}" />
+				    </div>
+				</div>		
+				
+				<hr />
+					<div class="form-row">
+					 	<div class="form-group col-md-2">
+							<h:outputLabel value="Nome: " />
+					    </div>
+					    <div class="form-group col-md-8">
+					     	<input type="text" class="form-control" 
+					     		placeholder="Informe o filtro ..."
+								jsf:value="#{livro1Controller.filtro}" />
+					    </div>
+					    
+					    <div class="form-group col-md-2">
+					      <h:commandButton value="Pesquisar"
+					     		class="btn btn-primary"
+								actionListener="#{livro1Controller.pesquisar}" />
+					    </div>
+					    
+						
+					</div>
+					<h:dataTable 
+						id="dataTable"
+						width="100%"
+						value="#{livro1Controller.listaLivro}"
+						var="obj"
+						styleClass="table"
+						headerClass="table-header"
+						rowClasses="table-odd-row,table-even-row">
+						<h:column>
+							<f:facet name="header">Nome</f:facet>
+							<h:outputLabel value="#{obj.nome}" />
+						</h:column>		
+						<h:column>
+							<f:facet name="header">Data Lançamento</f:facet>
+							<h:outputLabel value="#{obj.dataLancamento}" />
+						</h:column>	
+						<h:column>
+							<f:facet name="header">Editora</f:facet>
+							<h:outputLabel value="#{obj.editora}" />
+						</h:column>	
+						<h:column>
+							<f:facet name="header">Autor</f:facet>
+							<h:outputLabel value="#{obj.autor}" />
+						</h:column>	
+						<h:column>
+							<f:facet name="header">Genero</f:facet>
+							<h:outputLabel value="#{obj.genero.id}" />
+						</h:column>	
+						<h:column>
+							<f:facet name="header">Ação</f:facet>
+							<h:commandButton value="Editar"
+								class="btn btn-primary"
+								action="#{livro1Controller.editar(obj.id)}">
+								<f:ajax execute="@this" render="@form"/>
+							</h:commandButton>
+						</h:column>	
+					
+					</h:dataTable>
+			</div>
+		</div>
+	</div>
+
 	</h:form>
-</h:body>
+
+</ui:define>
+</ui:composition>
 </html>

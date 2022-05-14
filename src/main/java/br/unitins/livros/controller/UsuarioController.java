@@ -20,9 +20,13 @@ public class UsuarioController implements Serializable {
 	private Usuario usuario;
 	private List<Usuario> listaUsuario;
 
-
 	public void incluir() {
 		UsuarioDAO dao = new UsuarioDAO();
+		// gerando o hash da senha
+		String senha = getUsuario().getLogin() + getUsuario().getSenha();
+		senha = Util.hash(senha);
+		getUsuario().setSenha(senha);
+		
 		if (!dao.insert(getUsuario())) {
 			Util.addMessageInfo("Erro ao tentar incluir o usuário.");
 			return;
@@ -34,6 +38,12 @@ public class UsuarioController implements Serializable {
 
 	public void alterar() {
 		UsuarioDAO dao = new UsuarioDAO();
+		
+		// gerando o hash da senha
+		String senha = getUsuario().getLogin() + getUsuario().getSenha();
+		senha = Util.hash(senha);
+		getUsuario().setSenha(senha);
+		
 		if (!dao.update(getUsuario())) {
 			Util.addMessageInfo("Erro ao tentar alterar o usuário.");
 			return;
