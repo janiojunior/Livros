@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.unitins.livros.model.Autor;
 import br.unitins.livros.model.Genero;
 import br.unitins.livros.model.Livro;
 
@@ -27,10 +28,8 @@ public class LivroDAO implements DAO<Livro> {
 		sql.append("  nome, ");
 		sql.append("  data_lancamento, ");
 		sql.append("  editora, ");
-		sql.append("  autor, ");
-		sql.append("  id_genero ");
+		sql.append("  id_autor ");
 		sql.append(") VALUES ( ");
-		sql.append("  ?, ");
 		sql.append("  ?, ");
 		sql.append("  ?, ");
 		sql.append("  ?, ");
@@ -43,11 +42,11 @@ public class LivroDAO implements DAO<Livro> {
 			stat.setString(1, obj.getNome());
 			stat.setDate(2, Date.valueOf(obj.getDataLancamento()));
 			stat.setString(3, obj.getEditora());
-			stat.setString(4, obj.getAutor());
-			if ((obj.getGenero() == null || obj.getGenero().getId() == null))
-				stat.setObject(5, null);
+
+			if (obj.getAutor() == null || obj.getAutor().getId() == null)
+				stat.setObject(4, null);
 			else
-				stat.setInt(5, obj.getGenero().getId());
+				stat.setInt(4, obj.getAutor().getId());
 
 			stat.execute();
 
@@ -84,8 +83,7 @@ public class LivroDAO implements DAO<Livro> {
 		sql.append("  nome = ?, ");
 		sql.append("  data_lancamento = ?, ");
 		sql.append("  editora = ?, ");
-		sql.append("  autor = ?, ");
-		sql.append("  id_genero = ? ");
+		sql.append("  id_autor = ? ");
 		sql.append("WHERE ");
 		sql.append("  id = ?  ");
 
@@ -95,13 +93,12 @@ public class LivroDAO implements DAO<Livro> {
 			stat.setString(1, obj.getNome());
 			stat.setDate(2, Date.valueOf(obj.getDataLancamento()));
 			stat.setString(3, obj.getEditora());
-			stat.setString(4, obj.getAutor());
-			if ((obj.getGenero() == null || obj.getGenero().getId() == null))
-				stat.setObject(5, null);
+			if (obj.getAutor() == null || obj.getAutor().getId() == null)
+				stat.setObject(4, null);
 			else
-				stat.setInt(5, obj.getGenero().getId());
-			
-			stat.setInt(6, obj.getId());
+				stat.setInt(4, obj.getAutor().getId());
+
+			stat.setInt(5, obj.getId());
 
 			stat.execute();
 
@@ -146,13 +143,14 @@ public class LivroDAO implements DAO<Livro> {
 		sql.append("  l.nome, ");
 		sql.append("  l.data_lancamento, ");
 		sql.append("  l.editora, ");
-		sql.append("  l.autor, ");
-		sql.append("  l.id_genero ");
+		sql.append("  l.id_autor, ");
+		sql.append("  a.nome AS nome_autor, ");
+		sql.append("  a.data_nascimento ");
 		sql.append("FROM ");
-		sql.append("  livro l ");
+		sql.append("  livro l LEFT JOIN autor a ON a.id = l.id_autor ");
 		sql.append("ORDER BY ");
 		sql.append("  l.nome ");
-
+		
 		ResultSet rs = null;
 
 		try {
@@ -163,11 +161,13 @@ public class LivroDAO implements DAO<Livro> {
 				livro.setNome(rs.getString("nome"));
 				livro.setDataLancamento(rs.getDate("data_lancamento").toLocalDate());
 				livro.setEditora(rs.getString("editora"));
-				livro.setAutor(rs.getString("autor"));
-				
-				livro.setGenero(new Genero());
-				livro.getGenero().setId(rs.getInt("id_genero"));
-					
+				livro.setAutor(new Autor());
+				if (rs.getObject("id_autor") != null) {
+					livro.getAutor().setId(rs.getInt("id_autor"));
+					livro.getAutor().setNome(rs.getString("nome_autor"));
+					livro.getAutor().setDataNascimento(rs.getDate("data_nascimento").toLocalDate());
+				}
+
 				lista.add(livro);
 			}
 		} catch (SQLException e) {
@@ -187,25 +187,26 @@ public class LivroDAO implements DAO<Livro> {
 		}
 		return lista;
 	}
-	
+
 	public Livro getById(int id) {
 		Connection conn = DAO.getConnection();
 		if (conn == null) {
 			return null;
 		}
-		
+
 		Livro livro = null;
-		
+
 		StringBuffer sql = new StringBuffer();
 		sql.append("SELECT ");
 		sql.append("  l.id, ");
 		sql.append("  l.nome, ");
 		sql.append("  l.data_lancamento, ");
 		sql.append("  l.editora, ");
-		sql.append("  l.autor, ");
-		sql.append("  l.id_genero ");
+		sql.append("  l.id_autor, ");
+		sql.append("  a.nome AS nome_autor, ");
+		sql.append("  a.data_nascimento ");
 		sql.append("FROM ");
-		sql.append("  livro l ");
+		sql.append("  livro l LEFT JOIN autor a ON a.id = l.id_autor ");
 		sql.append("WHERE ");
 		sql.append("  l.id = ? ");
 
@@ -214,7 +215,7 @@ public class LivroDAO implements DAO<Livro> {
 		try {
 			stat = conn.prepareStatement(sql.toString());
 			stat.setInt(1, id);
-			
+
 			rs = stat.executeQuery();
 			if (rs.next()) {
 				livro = new Livro();
@@ -222,15 +223,17 @@ public class LivroDAO implements DAO<Livro> {
 				livro.setNome(rs.getString("nome"));
 				livro.setDataLancamento(rs.getDate("data_lancamento").toLocalDate());
 				livro.setEditora(rs.getString("editora"));
-				livro.setAutor(rs.getString("autor"));
-				
-				livro.setGenero(new Genero());
-				livro.getGenero().setId(rs.getInt("id_genero"));
+				livro.setAutor(new Autor());
+				if (rs.getObject("id_autor") != null) {
+					livro.getAutor().setId(rs.getInt("id_autor"));
+					livro.getAutor().setNome(rs.getString("nome_autor"));
+					livro.getAutor().setDataNascimento(rs.getDate("data_nascimento").toLocalDate());
+				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		try {
 			rs.close();
 		} catch (SQLException e) {
@@ -258,10 +261,11 @@ public class LivroDAO implements DAO<Livro> {
 		sql.append("  l.nome, ");
 		sql.append("  l.data_lancamento, ");
 		sql.append("  l.editora, ");
-		sql.append("  l.autor, ");
-		sql.append("  l.id_genero ");
+		sql.append("  l.id_autor, ");
+		sql.append("  a.nome AS nome_autor, ");
+		sql.append("  a.data_nascimento ");
 		sql.append("FROM ");
-		sql.append("  livro l ");
+		sql.append("  livro l LEFT JOIN autor a ON a.id = l.id_autor ");
 		sql.append("WHERE ");
 		sql.append(" l.nome iLIKE ? ");
 		sql.append("ORDER BY ");
@@ -272,7 +276,7 @@ public class LivroDAO implements DAO<Livro> {
 		try {
 			stat = conn.prepareStatement(sql.toString());
 			stat.setString(1, "%" + nome + "%");
-			
+
 			rs = stat.executeQuery();
 			while (rs.next()) {
 				Livro livro = new Livro();
@@ -280,11 +284,13 @@ public class LivroDAO implements DAO<Livro> {
 				livro.setNome(rs.getString("nome"));
 				livro.setDataLancamento(rs.getDate("data_lancamento").toLocalDate());
 				livro.setEditora(rs.getString("editora"));
-				livro.setAutor(rs.getString("autor"));
-				
-				livro.setGenero(new Genero());
-				livro.getGenero().setId(rs.getInt("id_genero"));
-					
+				livro.setAutor(new Autor());
+				if (rs.getObject("id_autor") != null) {
+					livro.getAutor().setId(rs.getInt("id_autor"));
+					livro.getAutor().setNome(rs.getString("nome_autor"));
+					livro.getAutor().setDataNascimento(rs.getDate("data_nascimento").toLocalDate());
+				}
+
 				lista.add(livro);
 			}
 		} catch (SQLException e) {
@@ -304,7 +310,5 @@ public class LivroDAO implements DAO<Livro> {
 		}
 		return lista;
 	}
-
-	
 
 }

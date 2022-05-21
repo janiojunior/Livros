@@ -18,9 +18,7 @@ public class Livro implements Cloneable {
 	private String editora;
 
 	@NotNull(message = "O autor não pode ser nulo.")
-	private String autor;
-
-	private Genero genero;
+	private Autor autor;
 
 	public Livro getClone() {
 		try {
@@ -80,19 +78,11 @@ public class Livro implements Cloneable {
 		this.editora = editora;
 	}
 
-	public Genero getGenero() {
-		return genero;
-	}
-
-	public void setGenero(Genero genero) {
-		this.genero = genero;
-	}
-
-	public String getAutor() {
+	public Autor getAutor() {
 		return autor;
 	}
 
-	public void setAutor(String autor) {
+	public void setAutor(Autor autor) {
 		this.autor = autor;
 	}
 

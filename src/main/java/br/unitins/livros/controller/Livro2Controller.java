@@ -1,16 +1,18 @@
 package br.unitins.livros.controller;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import br.unitins.livros.application.Util;
+import br.unitins.livros.dao.AutorDAO;
 import br.unitins.livros.dao.LivroDAO;
-import br.unitins.livros.model.Genero;
+import br.unitins.livros.model.Autor;
 import br.unitins.livros.model.Livro;
 
 @Named
@@ -19,11 +21,22 @@ public class Livro2Controller implements Serializable {
 
 	private static final long serialVersionUID = 8269752858637589975L;
 	private Livro livro;
+	private List<Autor> listaAutor;
 	
 	public Livro2Controller() {
 		Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
 		flash.keep("livroFlash");
 		setLivro((Livro)flash.get("livroFlash"));
+	}
+	
+	public List<Autor> getListaAutor() {
+		if (listaAutor == null) {
+			AutorDAO dao = new AutorDAO();
+			listaAutor = dao.getAll();
+			if (listaAutor == null)
+				listaAutor = new ArrayList<Autor>();
+		}
+		return listaAutor;
 	}
 	
 	public void voltar() {
@@ -67,7 +80,7 @@ public class Livro2Controller implements Serializable {
 	public Livro getLivro() {
 		if (livro == null) {
 			livro = new Livro();
-			livro.setGenero(new Genero());
+			livro.setAutor(new Autor());
 		}
 		return livro;
 	}

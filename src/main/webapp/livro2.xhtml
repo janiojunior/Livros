@@ -9,7 +9,7 @@
 <h:body>
 	<h:form id="formPrincipal">
 		<h:messages id="messages"
-			globalOnly="true"  
+			globalOnly="false"  
 			infoStyle="color:green;"  
 			warnStyle="color:yellow;"  
 			errorStyle="color:red;" />
@@ -45,7 +45,14 @@
 			<h:inputText value="#{livro2Controller.livro.editora}"/>
 			
 			<h:outputLabel value="Autor:" />
-			<h:inputText value="#{livro2Controller.livro.autor}"/>
+			<h:selectOneMenu value="#{livro2Controller.livro.autor}">
+				<f:selectItem itemLabel="Selecione um Autor"/>
+				<f:selectItems 
+					value="#{livro2Controller.listaAutor}" 
+					var="autor"
+					itemLabel="#{autor.nome}"
+					itemValue="#{autor}"/>
+			</h:selectOneMenu>
 			
 
 		</h:panelGrid>
@@ -53,7 +60,7 @@
 			value="Incluir" 
 			actionListener="#{livro2Controller.incluir}"
 			disabled="#{livro2Controller.livro.id!=null}">
-			<f:ajax execute="formPrincipal" render="messages pgPrincipal dataTable" />
+			
 		</h:commandButton>
 			
 		<h:commandButton 
