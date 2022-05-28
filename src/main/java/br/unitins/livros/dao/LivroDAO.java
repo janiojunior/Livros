@@ -27,6 +27,8 @@ public class LivroDAO implements DAO<Livro> {
 		sql.append("INSERT INTO livro ( ");
 		sql.append("  nome, ");
 		sql.append("  data_lancamento, ");
+		sql.append("  preco, ");
+		sql.append("  estoque, ");
 		sql.append("  editora, ");
 		sql.append("  id_autor ");
 		sql.append(") VALUES ( ");
@@ -41,12 +43,14 @@ public class LivroDAO implements DAO<Livro> {
 			stat = conn.prepareStatement(sql.toString());
 			stat.setString(1, obj.getNome());
 			stat.setDate(2, Date.valueOf(obj.getDataLancamento()));
-			stat.setString(3, obj.getEditora());
+			stat.setDouble(3, obj.getPreco());
+			stat.setInt(4, obj.getEstoque());
+			stat.setString(5, obj.getEditora());
 
 			if (obj.getAutor() == null || obj.getAutor().getId() == null)
-				stat.setObject(4, null);
+				stat.setObject(6, null);
 			else
-				stat.setInt(4, obj.getAutor().getId());
+				stat.setInt(6, obj.getAutor().getId());
 
 			stat.execute();
 
@@ -82,6 +86,8 @@ public class LivroDAO implements DAO<Livro> {
 		sql.append("UPDATE livro SET  ");
 		sql.append("  nome = ?, ");
 		sql.append("  data_lancamento = ?, ");
+		sql.append("  preco = ?, ");
+		sql.append("  estoque = ?, ");
 		sql.append("  editora = ?, ");
 		sql.append("  id_autor = ? ");
 		sql.append("WHERE ");
@@ -92,13 +98,14 @@ public class LivroDAO implements DAO<Livro> {
 			stat = conn.prepareStatement(sql.toString());
 			stat.setString(1, obj.getNome());
 			stat.setDate(2, Date.valueOf(obj.getDataLancamento()));
-			stat.setString(3, obj.getEditora());
-			if (obj.getAutor() == null || obj.getAutor().getId() == null)
-				stat.setObject(4, null);
-			else
-				stat.setInt(4, obj.getAutor().getId());
+			stat.setDouble(3, obj.getPreco());
+			stat.setInt(4, obj.getEstoque());
+			stat.setString(5, obj.getEditora());
 
-			stat.setInt(5, obj.getId());
+			if (obj.getAutor() == null || obj.getAutor().getId() == null)
+				stat.setObject(6, null);
+			else
+				stat.setInt(6, obj.getAutor().getId());
 
 			stat.execute();
 
@@ -142,6 +149,8 @@ public class LivroDAO implements DAO<Livro> {
 		sql.append("  l.id, ");
 		sql.append("  l.nome, ");
 		sql.append("  l.data_lancamento, ");
+		sql.append("  l.preco, ");
+		sql.append("  l.estoque, ");
 		sql.append("  l.editora, ");
 		sql.append("  l.id_autor, ");
 		sql.append("  a.nome AS nome_autor, ");
@@ -160,6 +169,8 @@ public class LivroDAO implements DAO<Livro> {
 				livro.setId(rs.getInt("id"));
 				livro.setNome(rs.getString("nome"));
 				livro.setDataLancamento(rs.getDate("data_lancamento").toLocalDate());
+				livro.setPreco(rs.getDouble("preco"));
+				livro.setEstoque(rs.getInt("estoque"));
 				livro.setEditora(rs.getString("editora"));
 				livro.setAutor(new Autor());
 				if (rs.getObject("id_autor") != null) {
@@ -201,6 +212,8 @@ public class LivroDAO implements DAO<Livro> {
 		sql.append("  l.id, ");
 		sql.append("  l.nome, ");
 		sql.append("  l.data_lancamento, ");
+		sql.append("  l.preco, ");
+		sql.append("  l.estoque, ");
 		sql.append("  l.editora, ");
 		sql.append("  l.id_autor, ");
 		sql.append("  a.nome AS nome_autor, ");
@@ -222,6 +235,8 @@ public class LivroDAO implements DAO<Livro> {
 				livro.setId(rs.getInt("id"));
 				livro.setNome(rs.getString("nome"));
 				livro.setDataLancamento(rs.getDate("data_lancamento").toLocalDate());
+				livro.setPreco(rs.getDouble("preco"));
+				livro.setEstoque(rs.getInt("estoque"));
 				livro.setEditora(rs.getString("editora"));
 				livro.setAutor(new Autor());
 				if (rs.getObject("id_autor") != null) {
@@ -260,6 +275,8 @@ public class LivroDAO implements DAO<Livro> {
 		sql.append("  l.id, ");
 		sql.append("  l.nome, ");
 		sql.append("  l.data_lancamento, ");
+		sql.append("  l.preco, ");
+		sql.append("  l.estoque, ");
 		sql.append("  l.editora, ");
 		sql.append("  l.id_autor, ");
 		sql.append("  a.nome AS nome_autor, ");
@@ -283,6 +300,8 @@ public class LivroDAO implements DAO<Livro> {
 				livro.setId(rs.getInt("id"));
 				livro.setNome(rs.getString("nome"));
 				livro.setDataLancamento(rs.getDate("data_lancamento").toLocalDate());
+				livro.setPreco(rs.getDouble("preco"));
+				livro.setEstoque(rs.getInt("estoque"));
 				livro.setEditora(rs.getString("editora"));
 				livro.setAutor(new Autor());
 				if (rs.getObject("id_autor") != null) {

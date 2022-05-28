@@ -13,6 +13,12 @@ public class Livro implements Cloneable {
 
 	@NotNull(message = "A data não pode ser nula.")
 	private LocalDate dataLancamento;
+	
+	@NotNull(message = "O preço não pode ser nulo.")
+	private Double preco;
+	
+	@NotNull(message = "O estoque não pode ser nulo.")
+	private Integer estoque;
 
 	@NotNull(message = "A editora não pode ser nula.")
 	private String editora;
@@ -85,5 +91,23 @@ public class Livro implements Cloneable {
 	public void setAutor(Autor autor) {
 		this.autor = autor;
 	}
+
+	public Double getPreco() {
+		return preco;
+	}
+
+	public void setPreco(Double preco) {
+		this.preco = preco;
+	}
+
+	public Integer getEstoque() {
+		return estoque;
+	}
+
+	public void setEstoque(Integer estoque) {
+		this.estoque = estoque;
+	}
+	
+	
 
 }

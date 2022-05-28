@@ -1,8 +1,10 @@
 package br.unitins.livros.controller;
 
 import javax.enterprise.context.RequestScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Named;
 
+import br.unitins.livros.application.Session;
 import br.unitins.livros.application.Util;
 import br.unitins.livros.dao.UsuarioDAO;
 import br.unitins.livros.model.Usuario;
@@ -18,9 +20,15 @@ public class LoginController {
 		UsuarioDAO dao = new UsuarioDAO();
 		Usuario usuario = dao.verificarLogin(getUsuario().getLogin(), hash);
 		if (usuario == null) {
-			Util.addMessageError("Login ou Senha inv·lido.");
+			Util.addMessageError("Login ou Senha inv√°lido.");
 			return;
 		}
+		// colocando o objeto na session
+		Session.getInstance().set("usuarioLogado", usuario);
+		
+// 		outra forma de colocar o objeto na session
+//		FacesContext.getCurrentInstance().getExternalContext().
+//		getSessionMap().put("usuarioLogado", usuario);
 		
 		Util.redirect("template.xhtml");
 	}
