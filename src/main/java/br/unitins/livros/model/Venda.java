@@ -8,6 +8,7 @@ public class Venda {
 	private Integer id;
 	private LocalDateTime dataVenda;
 	private List<ItemVenda> listaItemVenda;
+	private Double totalVenda;
 	private Usuario usuario;
 
 	public Integer getId() {
@@ -40,6 +41,14 @@ public class Venda {
 
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
+	}
+
+	public Double getTotalVenda() {
+		return totalVenda;
+	}
+
+	public void setTotalVenda(Double totalVenda) {
+		this.totalVenda = totalVenda;
 	}
 
 }
