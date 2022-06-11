@@ -25,7 +25,7 @@
 					</div>
 					<div class="mb-3">
 						<h:outputLabel value="Data da Venda: " styleClass="control-label" />
-						<h:outputText value=" #{detalheVendaController.venda.data}" styleClass="control-label" >
+						<h:outputText value=" #{detalheVendaController.venda.dataVenda}" styleClass="control-label" >
 							<f:convertDateTime type="localDate" pattern="dd-MM-yyyy"/>
 						</h:outputText>
 					</div>
@@ -43,7 +43,7 @@
 						<h:dataTable value="#{detalheVendaController.venda.listaItemVenda}" var="obj" styleClass="table table-striped table-hover">>
 							<h:column>
 								<f:facet name="header">Nome</f:facet>
-								<h:outputLabel value="#{obj.produto.nome}" />
+								<h:outputLabel value="#{obj.livro.nome}" />
 							</h:column>
 							
 							<h:column>
@@ -63,7 +63,7 @@
 					<div class="mb-3">	
 						<h:commandButton value="Voltar" 
 							class="btn btn-primary"
-							onclick="history.go(-1); return false;"  />
+							onclick="history.back(); return false;"  />
 					</div>
 				</h:form>
 			</div>

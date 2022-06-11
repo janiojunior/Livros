@@ -2,7 +2,7 @@ package br.unitins.livros.model;
 
 public enum Perfil {
 	
-	ADMINSTRADOR(1, "Administrador"), 
+	ADMINISTRADOR(1, "Administrador"), 
 	FUNCIONARIO(2, "Funcionario"), 
 	GERENTE(3, "Gerente"), 
 	CLIENTE(4, "Cliente");

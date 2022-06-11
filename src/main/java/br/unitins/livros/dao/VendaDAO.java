@@ -187,68 +187,60 @@ public class VendaDAO implements DAO<Venda> {
 		return null;
 	}
 
-	public Venda getById(int id) {
-//		Connection conn = DAO.getConnection();
-//		if (conn == null) {
-//			return null;
-//		}
-//
-//		Venda venda = null;
-//
-//		StringBuffer sql = new StringBuffer();
-//		sql.append("SELECT ");
-//		sql.append("  l.id, ");
-//		sql.append("  l.nome, ");
-//		sql.append("  l.data_lancamento, ");
-//		sql.append("  l.preco, ");
-//		sql.append("  l.estoque, ");
-//		sql.append("  l.editora, ");
-//		sql.append("  l.id_autor, ");
-//		sql.append("  a.nome AS nome_autor, ");
-//		sql.append("  a.data_nascimento ");
-//		sql.append("FROM ");
-//		sql.append("  venda l LEFT JOIN autor a ON a.id = l.id_autor ");
-//		sql.append("WHERE ");
-//		sql.append("  l.id = ? ");
-//
-//		ResultSet rs = null;
-//		PreparedStatement stat = null;
-//		try {
-//			stat = conn.prepareStatement(sql.toString());
-//			stat.setInt(1, id);
-//
-//			rs = stat.executeQuery();
-//			if (rs.next()) {
-//				venda = new Venda();
-//				venda.setId(rs.getInt("id"));
-//				venda.setNome(rs.getString("nome"));
-//				venda.setDataLancamento(rs.getDate("data_lancamento").toLocalDate());
-//				venda.setPreco(rs.getDouble("preco"));
-//				venda.setEstoque(rs.getInt("estoque"));
-//				venda.setEditora(rs.getString("editora"));
-//				venda.setAutor(new Autor());
-//				if (rs.getObject("id_autor") != null) {
-//					venda.getAutor().setId(rs.getInt("id_autor"));
-//					venda.getAutor().setNome(rs.getString("nome_autor"));
-//					venda.getAutor().setDataNascimento(rs.getDate("data_nascimento").toLocalDate());
-//				}
-//			}
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//
-//		try {
-//			rs.close();
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//		try {
-//			conn.close();
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//		return venda;
-		return null;
+	/** @author janio
+	 *  @return retorna a propria venda com a lista de itens
+	 *  @param deve-se passar uma venda completa no parametro
+	 */
+	public Venda getByVenda(Venda venda) {
+		Connection conn = DAO.getConnection();
+		if (conn == null) {
+			return null;
+		}
+
+		venda.setListaItemVenda(new ArrayList<ItemVenda>());
+		
+		StringBuffer sql = new StringBuffer();
+		sql.append("SELECT ");
+		sql.append("  i.id, ");
+		sql.append("  i.valor, ");
+		sql.append("  i.quantidade, ");
+		sql.append("  i.id_livro ");
+		sql.append("FROM ");
+		sql.append("  item_venda i ");
+		sql.append("WHERE ");
+		sql.append("  i.id_venda = ? ");
+
+		ResultSet rs = null;
+		PreparedStatement stat = null;
+		try {
+			stat = conn.prepareStatement(sql.toString());
+			stat.setInt(1, venda.getId());
+
+			rs = stat.executeQuery();
+			LivroDAO dao = new LivroDAO();
+			while (rs.next()) {
+				ItemVenda item = new ItemVenda();
+				item.setId(rs.getInt("id"));
+				item.setValor(rs.getDouble("valor"));
+				item.setQuantidade(rs.getInt("quantidade"));
+				item.setLivro(dao.getById(rs.getInt("id_livro")));
+				venda.getListaItemVenda().add(item);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		try {
+			rs.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		try {
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return venda;
 	}
 
 	public List<Venda> getByUsuario(Usuario usuario) {
