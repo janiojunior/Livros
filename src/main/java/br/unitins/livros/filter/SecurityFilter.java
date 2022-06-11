@@ -29,7 +29,24 @@ public class SecurityFilter implements Filter {
 		
 		System.out.println(endereco);
 		
-		chain.doFilter(request, response);
+		// retorna uma sessao corrente (false - nao cria uma nova estrutura de sessao)
+		HttpSession session =  servletRequest.getSession(false);
+		Usuario usuarioLogado = null;
+		if (session != null)
+			usuarioLogado = (Usuario) session.getAttribute("usuarioLogado");
+		
+		// se nao estiver logado, redirecionar para a pagina de login
+		if (usuarioLogado == null) {
+			((HttpServletResponse)response).sendRedirect("/Livros/faces/login2.xhtml");
+		} else {
+			if (usuarioLogado.getPerfil().equals(Perfil.ADMINISTRADOR)
+					|| usuarioLogado.getPerfil().equals(Perfil.FUNCIONARIO)) {
+				// permitindo a execucao comleta do protocolo
+				chain.doFilter(request, response);
+			} else {
+				((HttpServletResponse)response).sendRedirect("/Livros/faces/semacesso.xhtml");
+			}
+		}
 		
 	}
 	
